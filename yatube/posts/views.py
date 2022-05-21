@@ -151,4 +151,3 @@ def profile_unfollow(request, username):
         'posts:profile',
         username=username
     )
-
