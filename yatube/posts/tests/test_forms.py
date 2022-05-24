@@ -68,7 +68,8 @@ class PostCreateFormTests(TestCase):
             Post.objects.filter(
                 group=self.group.id,
                 text=form_data['text'],
-                id=Post.objects.all().order_by('-id')[0].id
+                id=Post.objects.all().order_by('-id')[0].id,
+                image='posts/small.gif'
             ).exists()
         )
 
@@ -111,5 +112,6 @@ class PostCreateFormTests(TestCase):
             Comment.objects.filter(
                 post=self.post.pk,
                 text=form_data['text'],
+                id=Comment.objects.all().order_by('-id')[0].id
             ).exists()
         )

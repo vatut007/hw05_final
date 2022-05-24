@@ -7,7 +7,7 @@ from .utils import get_page_context
 
 
 def index(request):
-    posts = Post.objects.all()
+    posts = Post.objects.select_related('group').all()
     context = get_page_context(posts, request)
     return render(request, 'posts/index.html', context)
 
@@ -23,11 +23,11 @@ def group_posts(request, slug):
 
 def profile(request, username):
     author = get_object_or_404(User, username=username)
-    following = request.user.is_authenticated and \
+    following = request.user.is_authenticated and (
         Follow.objects.filter(
             user=request.user,
             author=author
-        ).exists()
+        ).exists())
     context = {
         'author': author,
         'following': following
@@ -107,7 +107,8 @@ def add_comment(request, post_id):
 
 @login_required
 def follow_index(request):
-    posts = Post.objects.filter(author__following__user=request.user)
+    posts = Post.objects.select_related(
+        'group').filter(author__following__user=request.user)
     context = get_page_context(posts, request)
     return render(request, 'posts/follow.html', context)
 
@@ -120,16 +121,7 @@ def profile_follow(request, username):
             'posts:profile',
             username=username
         )
-    follower = Follow.objects.filter(
-        user=request.user,
-        author=author
-    ).exists()
-    if follower is True:
-        return redirect(
-            'posts:profile',
-            username=username
-        )
-    Follow.objects.create(user=request.user, author=author)
+    Follow.objects.get_or_create(user=request.user, author=author)
     return redirect(
         'posts:profile',
         username=username

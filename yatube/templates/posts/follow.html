@@ -3,6 +3,7 @@
 {% block content %}
 {% load thumbnail %}
 {% load cache %}
+    {% include 'posts/includes/switcher.html' %}
     <div class="container py-5">
         {% cache 20 index_page page_obj%}
         <h1>Записи избранных авторов</h1>
