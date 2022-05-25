@@ -69,7 +69,7 @@ class PostCreateFormTests(TestCase):
                 group=self.group.id,
                 text=form_data['text'],
                 id=Post.objects.all().order_by('-id')[0].id,
-                image='posts/small.gif'
+                image=form_data['text']
             ).exists()
         )
 
